@@ -98,5 +98,20 @@ function renderPastVacations() {
         pastVacationList.appendChild(vacationEl);
     });
 
-    pastVacationContainer 
+    pastVacationContainer.appendChild(pastVacationHeader);
+    pastVacationContainer.appendChild(pastVacationList);
+
 } // renderPast acations
+
+function formatDate(dataString) {
+    //convert the date string to a Date object 
+    const date = new Date(dataString);
+
+    // format date into local specific string
+    //include your local for a better user experience 
+    return date.toLocaleDateString("en-US", {timeZone: "UTC"});
+
+}//formatDate
+
+//start the app by rendering the past vactaions on load, if any
+renderPastVacations();
