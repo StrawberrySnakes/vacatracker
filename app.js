@@ -2,6 +2,7 @@
 const newVacationFormEl = document.getElementsByTagName("form")[0];
 const startDateInputEl = document.getElementById("start-date");
 const endDateInputEl = document.getElementById("end-date");
+const pastVacationContainer = document.getElementById("past-vacations");
 
 // listen to the form submissions 
 newVacationFormEl.addEventListener("submit", (event)=>{
@@ -25,10 +26,7 @@ newVacationFormEl.addEventListener("submit", (event)=>{
     renderPastVacations();
 
     //reset the form
-    newVacationFormEl.reset();
-
-
-    
+    newVacationFormEl.reset(); 
 });
 
 function checkDatesInvalid(startDate, endDate) {
@@ -58,3 +56,29 @@ function storeNewVacation(startDate, endDate) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(vacations));
 
 } //storeNewVacation
+
+function getAllStoredVacations() {
+    //get the string of vacation from localStorage
+    const data = window.localStorage.getItem(STORAGE_KEY);
+
+    //if no vatactions stored, default to an empty array
+    //otherwise return stored data (JSON string) as parsed JSON
+
+    // ? works like an if then else, but it returns a value ? -- like a then --> leads to return the parse. the : looks like an else 
+    // let vacations = [];
+    // if (data) {
+    //     vacations = JSON.parse(data);
+    // } else {
+    //     vacations = [];
+    // } -- this is what that line is doing
+    const vacations = data ? JSON.parse(data) : [];
+    return vacations;
+} //get all stored values
+
+function renderPastVacations() {
+
+    //get the parsed string of vacations or an empty array in there aren't any
+    const vacations = getAllStoredVacations();
+    
+    pastVacationContainer 
+} // renderPast acations
