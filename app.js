@@ -76,9 +76,27 @@ function getAllStoredVacations() {
 } //get all stored values
 
 function renderPastVacations() {
-
     //get the parsed string of vacations or an empty array in there aren't any
     const vacations = getAllStoredVacations();
-    
+
+    // exit is there are no vacations 
+    if (vacations.length === 0) {
+        return;
+    }
+    //clear list of past vacations since we're going to re-render it 
+    pastVacationContainer.innerHTML = "";
+    const pastVacationHeader = document.createElement("h2");
+    pastVacationHeader.textContent = "Past Vacations";
+
+    const pastVacationList = document.createElement("ul");
+
+    //loop over all vacations and render them
+    vacations.forEach((vacation) => {
+        const vacationEl = document.createElement("li");
+        vacationEl.textContent = `From ${formatDate(vacation.startDate)}
+         to ${formatDate(vacation.endDate)}`;
+        pastVacationList.appendChild(vacationEl);
+    });
+
     pastVacationContainer 
 } // renderPast acations
