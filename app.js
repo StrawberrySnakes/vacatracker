@@ -5,9 +5,8 @@ const endDateInputEl = document.getElementById("end-date");
 const pastVacationContainer = document.getElementById("past-vacations");
 
 // listen to the form submissions 
-newVacationFormEl.addEventListener("submit", (event)=>{
-    // prevent the form from submitting to the server
-    //since we're doing everything on the client side
+newVacationFormEl.addEventListener("submit", (event)=> {
+    // prevent the form from submitting to the server since we're doing everything on the client side
     event.preventDefault();
 
     //get dates from form
@@ -15,11 +14,11 @@ newVacationFormEl.addEventListener("submit", (event)=>{
     const endDate = endDateInputEl.value;
 
     // check if the dates are invalid 
-    if(checkDatesInvalid(startDate, endDate)) {
+    if (checkDatesInvalid(startDate, endDate)) {
         return; //don't submit the form, just exit
     }
 
-    //store the new vacation in our client side storage 
+    //store the new vacation in our client-side storage 
     storeNewVacation(startDate, endDate);
 
     //refresh the UI
@@ -30,10 +29,9 @@ newVacationFormEl.addEventListener("submit", (event)=>{
 });
 
 function checkDatesInvalid(startDate, endDate) {
-    if (!startDate || !endDate || startDate>endDate) {
-        // we're just gonna clear form normally you would add error message
+    if (!startDate || !endDate || startDate > endDate) {
+        // we're just going to clear the form, normally you would add an error message
         newVacationFormEl.reset();
-
         return true; //invalid
     } else {
         return false; //valid
@@ -42,44 +40,34 @@ function checkDatesInvalid(startDate, endDate) {
 
 const STORAGE_KEY = "vaca-tracker";
 function storeNewVacation(startDate, endDate) {
-    // get data from storage 
-    // const vacations = getAllStoredVacations(); //returns an array of objects
+    // get existing vacations from storage
+    const vacations = getAllStoredVacations(); //returns an array of objects
 
     vacations.push({startDate, endDate});
 
     //sort the array so newest to oldest 
-    vacations.sort((a, b)=> {
-        return new Date(b.startDate - new Date(a.startDate));
+    vacations.sort((a, b) => {
+        return new Date(b.startDate) - new Date(a.startDate); // Correct date comparison
     });
 
     //store the new array back in storage
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(vacations));
-
-} //storeNewVacation
+}
 
 function getAllStoredVacations() {
     //get the string of vacation from localStorage
     const data = window.localStorage.getItem(STORAGE_KEY);
 
-    //if no vatactions stored, default to an empty array
-    //otherwise return stored data (JSON string) as parsed JSON
-
-    // ? works like an if then else, but it returns a value ? -- like a then --> leads to return the parse. the : looks like an else 
-    // let vacations = [];
-    // if (data) {
-    //     vacations = JSON.parse(data);
-    // } else {
-    //     vacations = [];
-    // } -- this is what that line is doing
+    //if no vacations stored, default to an empty array
     const vacations = data ? JSON.parse(data) : [];
     return vacations;
-} //get all stored values
+}
 
 function renderPastVacations() {
-    //get the parsed string of vacations or an empty array in there aren't any
+    //get the parsed string of vacations or an empty array if there aren't any
     const vacations = getAllStoredVacations();
 
-    // exit is there are no vacations 
+    // exit if there are no vacations 
     if (vacations.length === 0) {
         return;
     }
@@ -93,25 +81,21 @@ function renderPastVacations() {
     //loop over all vacations and render them
     vacations.forEach((vacation) => {
         const vacationEl = document.createElement("li");
-        vacationEl.textContent = `From ${formatDate(vacation.startDate)}
-         to ${formatDate(vacation.endDate)}`;
+        vacationEl.textContent = `From ${formatDate(vacation.startDate)} to ${formatDate(vacation.endDate)}`;
         pastVacationList.appendChild(vacationEl);
     });
 
     pastVacationContainer.appendChild(pastVacationHeader);
     pastVacationContainer.appendChild(pastVacationList);
-
-} // renderPast acations
+}
 
 function formatDate(dataString) {
     //convert the date string to a Date object 
     const date = new Date(dataString);
 
-    // format date into local specific string
-    //include your local for a better user experience 
-    return date.toLocaleDateString("en-US", {timeZone: "UTC"});
+    // format date into locale-specific string
+    return date.toLocaleDateString("en-US", { timeZone: "UTC" });
+}
 
-}//formatDate
-
-//start the app by rendering the past vactaions on load, if any
+//start the app by rendering the past vacations on load, if any
 renderPastVacations();
