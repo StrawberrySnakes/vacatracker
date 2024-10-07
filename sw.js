@@ -28,3 +28,24 @@ self.addEventListener("install", (event) => {
 // use the activated event to delete any old caches so we dont run out of space. 
 // We're going to delete all but the current one. 
 // Then set the service worker as the controller for our app (pwa). 
+self.addEventListener("activate", (event) => {
+    event.waitUntil(
+        (async ()=>{
+            //get names of existing caches
+            const names = await caches.keys();
+            //iterate through list and check each to see it is the current cache
+            //and delete it if it is not
+            await Promise.all(
+                names.map((name) => {
+                    if(name !== CACHE_NAME) {
+                        return cashes.delete(name);
+                    }
+                })
+            ); //promise all
+
+            //use the claim() method of the client's interface to 
+            //enable our service worker as the controller 
+            await clients.claim();
+        })()
+    ); //waitUntil
+});
