@@ -49,3 +49,36 @@ self.addEventListener("activate", (event) => {
         })()
     ); //waitUntil
 });
+
+// use the fethch event to intercept requests to the server so we can serve up our cached pages or respond with an error for 404
+self.addEventListener("fetch", (event) => {
+    event.respondWith( (async () => {
+            //try to get the resource from the cache
+            const cashedResponse = await cache.match(event.request);
+            if (cashedResponse) {
+                return cashedResponse;
+            }
+
+            try {
+                const networkResponse = await fetch(event.request);
+                //cache the new response for future use
+                cache.put(event.request, networkResponse.clone());
+
+                return networkResponse;
+
+            } catch (error) {
+
+                console.log("Fetch failed; returning offline page instead.", error);
+
+                //if the request is for a page, return index.html as a fallback
+                if (event.request.mode === "navigate") {
+                    return cache.match("/index.html");
+                }
+
+                // for everything else, we're just going to throw and error 
+                //you might want to return a default offline asset instead
+                throw error; 
+            }
+        })()
+    ); //respond with
+}); //fetch
