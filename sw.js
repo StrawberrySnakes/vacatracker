@@ -59,6 +59,8 @@ self.addEventListener("fetch", (event) => {
                 return cashedResponse;
             }
 
+            //if not in cache try to fetch from network
+
             try {
                 const networkResponse = await fetch(event.request);
                 //cache the new response for future use
