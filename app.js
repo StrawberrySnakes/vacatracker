@@ -123,12 +123,28 @@ navigator.serviceWorker.addEventListener("message", (event)=>{
 
 
 //function to send message to service worker
-function sendMessageToSW(message) {
-    if(navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage(message);
-    }
-}
+// function sendMessageToSW(message) {
+//     if(navigator.serviceWorker.controller) {
+//         navigator.serviceWorker.controller.postMessage(message);
+//     }
+// }
 
 document.getElementById("sendButton").addEventListener("click", () => {
     sendMessageToSW({type: "action", data: "Button clicked"});
+});
+
+//create a broadcast channel - name here needs to match the name in the sw
+const channel = new BroadcastChannel("pwa_channel");
+
+//listen for messages
+channel.onmessage = (event) => {
+    console.log("Received a massage in PWA:",event.data);
+    document.getElementById('messages').insertAdjacentHTML("beforeend", `<p>Received: ${event.data}</p>`)
+};
+
+//send a message when the button is clicked
+document.getElementById("sendButton").addEventListener("click", () => {
+    const message = "Hello from PWA!";
+    channel.postMessage(message);
+    console.log("Sent message from PWA: ", message);
 });
