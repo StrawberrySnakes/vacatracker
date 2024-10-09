@@ -99,3 +99,19 @@ function formatDate(dataString) {
 
 //start the app by rendering the past vacations on load, if any
 renderPastVacations();
+
+//register the service worker 
+if ("serviceworker" in navigator) {
+    navigator.serviceWorker.register("sw.js")
+    .then((registration) => {
+        console.log("Service worker registered with scope:", registration.scope);
+    })
+    .catch((error) => {
+        console.log("Service worker registration failed:", error);
+    });
+}
+
+//listen for message from the service wokrer
+navigator.serviceWorker.addEventListener("message", (event)=>{
+    console.log("Received a message for service worker:",event.data);
+});
