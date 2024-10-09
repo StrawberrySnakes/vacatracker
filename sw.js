@@ -69,4 +69,16 @@ self.addEventListener("fetch", (event) => {
     );
 });
 
-//send a message to the client evey 10 seconds
+//send a message to the client -- we will use to update data later 
+function sendMessageToPWD(message) {
+    self.clients.matchAll().then((clients) => {
+        clients.forEach((client) => {
+            client.postMessage(message);
+        });
+    });
+}
+
+//send message every 10 seconds
+setInterval(() => {
+    sendMessageToPWD({type: "update", data: "New data available"});
+}, 10000);
