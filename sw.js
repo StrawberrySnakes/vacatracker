@@ -1,4 +1,4 @@
-const VERSION = "v1";
+const VERSION = "v2";
 // offline resource list
 const APP_STATIC_RESOURCES = [
     "index.html",
@@ -82,3 +82,12 @@ function sendMessageToPWD(message) {
 setInterval(() => {
     sendMessageToPWD({type: "update", data: "New data available"});
 }, 10000);
+
+self.addEventListener("message", (event) => {
+    console.log("Service worker received message", event.data);
+
+    event.source.postMessage({
+        type: "reponse",
+        data : "Message received by sw",
+    });
+});
