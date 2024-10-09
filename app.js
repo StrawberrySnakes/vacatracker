@@ -114,4 +114,21 @@ if ("serviceworker" in navigator) {
 //listen for message from the service wokrer
 navigator.serviceWorker.addEventListener("message", (event)=>{
     console.log("Received a message for service worker:",event.data);
+
+    if(event.data.type === "update") {
+        console.log("Update received:",event.data.data);
+        //update your UI or perform some action
+    }
+});
+
+
+//function to send message to service worker
+function sendMessageToSW(message) {
+    if(navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage(message);
+    }
+}
+
+document.getElementById("sendButton").addEventListener("click", () => {
+    sendMessageToSW({type: "action", data: "Button clicked"});
 });
