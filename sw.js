@@ -102,3 +102,28 @@ channel.onmessage = (event) => {
 
 //echo message to PWA
 channel.postMessage("Service worker received:" + event.data);
+
+let db;
+const dbName = "SyncDatabase";
+const request = indexedDB.open(dbName, 1);
+
+request.onerror = function(event) {
+    console.error("Database error"+event.target.error)
+    
+}
+
+request.onsuccess = function (event) {
+    db = event.target.result;
+    console.log("Database opened successfully in SW")
+};
+
+self.addEventListener("sync", function(event) {
+    if(event.teg === "send=data") {
+        event.waitUntil(sendDataToServer());
+    }
+})
+
+function sendDataToServer() {
+    
+}//send data to server
+
