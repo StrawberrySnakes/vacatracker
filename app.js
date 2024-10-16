@@ -238,8 +238,8 @@ function sendData(data) {
             if(Math.random() > 0.5) {
                 resolve("Data sent successfully");
             } else {
-                reject("Data not sent susseccfully")
+                reject(new Error("Failed to send data"))
             }
-        })
+        }, 1000);
     })
 }

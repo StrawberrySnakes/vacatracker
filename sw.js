@@ -1,4 +1,4 @@
-const VERSION = "v3";
+const VERSION = "v4";
 // offline resource list
 const APP_STATIC_RESOURCES = [
     "index.html",
@@ -124,6 +124,43 @@ self.addEventListener("sync", function(event) {
 })
 
 function sendDataToServer() {
-    
+    return getAllPendingData().then(function(dataList){
+        return Promise.all(
+            dataList.map(function(item) {
+                //simulate sending the data to the 
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        if(Math.random() > 0.1) { //90% success rate
+                            console.log("Data sent successfully", item.data);
+                            resolve(item.id);
+                        } else {
+                            console.log("Failed to send data", item.data);
+                            reject(new Error("failed to send data"))
+                        }
+                    }, 1000);
+                })
+                .then(function(){
+                    //if successful, remove the item from the db
+                    return removeDataFromIndexDB(item.id);
+                });
+            }) 
+        );
+    })
 }//send data to server
+
+function getAllPendingData() {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(["pendingData"], "readonly");
+        const objectStore = transaction.objectStore("pendingData");
+        const request = objectStore.getAll();
+
+        request.onsuccess = function(event) {
+            resolve(event.target.result);
+        };
+
+        request.onerror = function(event) {
+            reject("Error fetching data: " + event.target.error);
+        };
+    });
+} //promise
 
