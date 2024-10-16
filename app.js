@@ -201,7 +201,7 @@ document.getElementById("dataForm").addEventListener("submit", function(event) {
     const data = document.getElementById("dataInput").value;
 
     //we need to check to see if both the service worker and the syncManger available
-    if("serveWorker" in navigator && "SyncManager" in window) {
+    if("serviceWorker" in navigator && "SyncManager" in window) {
         //were good to add the data to the database for offline persistance
         addDataToIndexDB(data)
         .then(() => navigator.serviceWorker.ready) //wait fo the sw to be ready
