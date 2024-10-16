@@ -17,13 +17,12 @@
       //with robust error checking with debugging
       if("serviceWorker" in navigator) {
         navigator.serviceWorker.register("sw.js").then(
-          (registration) => {console.log("Service worker registration successful"+ 
+          (registration) => {console.log("Service worker registration successful", 
           registration
         );
       },
       (error) => {
-        console.log("Service worker registration failed", 
-          registration);
+        console.log("Service worker registration failed", error);
       }
         );
       } else {
